@@ -1,0 +1,35 @@
+! version = 2.0
+
+! var type_yes_or_no = \sType "Yes" or "No" to continue.
+
+> begin
+
++ request
+* <get met> == undefined => <set met=true>{topic=welcome}{ok}
+- {ok}
+< begin
+
+> topic welcome
++ *
+- Welcome User, do you want me to recommend you a movie?<bot type_yes_or_no>{topic=start}
+< topic
+
+> topic start
++ yes
+- Please enter which genre of movie do you want.{topic=reccomend}
+
++ no
+- thank you, bye.{topic=welcome}
+< topic
+
+> topic reccomend
++ *
+-<call>getMovies <star></call>
+^ thank you.{topic=welcome} 
+< topic
+
+> object getMoviename python
+  import utilities
+  movie = utilities.getMovie(str(args[0]))
+    return "done"
+< object
